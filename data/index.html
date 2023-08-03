@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Testing ESP32-S3-DEVKITC-1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+
+  <div class="card-grid">
+      <div class="card">        
+        <p class="calibr-pbtn">
+		 <button type="button" class="calibr" onclick="built_in_red()">Builtin_led RED</button><br>
+		 <button type="button" class="calibr" onclick="built_in_blue()">Builtin_led BLUE</button><br>
+		 <button type="button" class="calibr" onclick="built_in_green()">Builtin_led GREEN</button><br>
+		 <button type="button" class="calibr" onclick="reserved()">Reserved</button>
+        </p>
+      </div>
+  </div>
+
+</body>
+
+<script>
+
+
+function built_in_red(){
+
+let postObj = { 
+    rgbled: 'red'  
+}
+let post = JSON.stringify(postObj)
+
+fetch("/posts", {
+    method: 'post',
+    body: post,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+// (C) RETURN SERVER RESPONSE AS TEXT
+.then((res) => {
+   if (res.status != 200) { throw new Error("Bad Server Response"); }
+   return res.text();
+})
+// (D) SERVER RESPONSE
+.then((res) => {
+    console.log(res);
+	//alert(res);
+	//alert("Post: calibr->start");
+
+})
+// (E) HANDLE ERRORS - OPTIONAL
+.catch((error) => {
+    console.log(error)
+});
+// (F) PREVENT FORM SUBMIT
+return false;
+}
+
+
+function built_in_blue(){
+
+let postObj = { 
+    rgbled: 'blue'  
+}
+let post = JSON.stringify(postObj)
+
+fetch("/posts", {
+    method: 'post',
+    body: post,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+// (C) RETURN SERVER RESPONSE AS TEXT
+.then((res) => {
+   if (res.status != 200) { throw new Error("Bad Server Response"); }
+   return res.text();
+})
+// (D) SERVER RESPONSE
+.then((res) => {
+    console.log(res);
+	//alert(res);
+	//alert("Post: calibr->start");
+
+})
+// (E) HANDLE ERRORS - OPTIONAL
+.catch((error) => {
+    console.log(error)
+});
+// (F) PREVENT FORM SUBMIT
+return false;
+}
+
+function built_in_green(){
+
+let postObj = { 
+    rgbled: 'green'  
+}
+let post = JSON.stringify(postObj)
+
+fetch("/posts", {
+    method: 'post',
+    body: post,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+// (C) RETURN SERVER RESPONSE AS TEXT
+.then((res) => {
+   if (res.status != 200) { throw new Error("Bad Server Response"); }
+   return res.text();
+})
+// (D) SERVER RESPONSE
+.then((res) => {
+    console.log(res);
+	//alert(res);
+	//alert("Post: calibr->start");
+
+})
+// (E) HANDLE ERRORS - OPTIONAL
+.catch((error) => {
+    console.log(error)
+});
+// (F) PREVENT FORM SUBMIT
+return false;
+}
+
+
+
+function reserved(){
+  console.log("Reserved function..")
+}
+
+
+</script>
+</html>
