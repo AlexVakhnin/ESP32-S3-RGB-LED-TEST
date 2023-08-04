@@ -60,7 +60,7 @@ void setup() {
 
 
   String ssid = "tenda"; //WIFI SSID
-  String pass = "tenda_639122"; //WIFI PASS
+  String pass = "tenda_"; //WIFI PASS
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
