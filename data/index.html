@@ -11,7 +11,14 @@
 
 
   <div class="card-grid">
-      <div class="card">        
+      <div class="card">  
+        <p class="sys-inf">
+            <span>Sys: </span>
+            <span id="rssi">%RSSI%</span>
+            <span id="freemem">%freemem%</span>
+            <span id="iday">0</span>
+            <span id="ihour">0</span>:<span id="imin">0</span>.<span id="isec">0</span>
+        </p>      
         <p class="calibr-pbtn">
 		 <button type="button" class="calibr" onclick="built_in_red()">Builtin_led RED</button><br>
 		 <button type="button" class="calibr" onclick="built_in_blue()">Builtin_led BLUE</button><br>
@@ -138,6 +145,30 @@ function reserved(){
   console.log("Reserved function..")
 }
 
+
+setInterval(function ( ) {  /*период 2 сек.*/
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+	  //if (passed_change > 0 ) {passed_change -= 1}
+    if (this.readyState == 4 && this.status == 200) {
+		  var myObj = JSON.parse(this.responseText);
+		  document.getElementById("rssi").innerHTML = myObj.rssi;
+		 // document.getElementById("humis").innerHTML = myObj.humis.toFixed(1);
+		 // document.getElementById("temps").innerHTML = myObj.temps.toFixed(1);
+		 // document.getElementById("co2s").innerHTML = myObj.co2;
+		  document.getElementById("freemem").innerHTML = myObj.freemem;
+		  document.getElementById("iday").innerHTML = myObj.iday;
+		  document.getElementById("ihour").innerHTML = myObj.ihour;  //.padStart(2,"0");
+		  document.getElementById("imin").innerHTML =  String(myObj.imin).padStart(2,"0");
+		  document.getElementById("isec").innerHTML =  String(myObj.isec).padStart(2,"0");
+      //g3diff = myObj.g3diff;
+      //g2diff = myObj.g2diff;
+      }
+    };
+    xhttp.open("GET", "/jsonstate", true);
+    xhttp.send();
+  }, 1900 ) ;
+  
 
 </script>
 </html>

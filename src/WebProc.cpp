@@ -10,7 +10,7 @@ String processor(const String& var){
   }
   else */
   if (var == "RSSI"){
-      return getRSSI();
+      return String(WiFi.RSSI());
   }
 /*
   else if (var == "STATE1"){

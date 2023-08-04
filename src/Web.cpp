@@ -81,6 +81,28 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     ESP.restart();
   });
 
+  //Это ответ сервера на AJAX запрос из WEB страницы"
+  server.on("/jsonstate", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncResponseStream *response = request->beginResponseStream("application/json");    
+    const int capacity = JSON_OBJECT_SIZE(6);//Количество живых параметров JSON
+    StaticJsonDocument<capacity> doc;
+    doc["rssi"] = WiFi.RSSI();
+    //doc["humis"] = round2(humiState);
+    //doc["temps"] = round2(tempState);
+    //doc["co2"] = CO2;
+    doc["freemem"] = ESP.getFreeHeap();  //или String().c_str();???????
+    doc["iday"] = iday;
+    doc["ihour"] = ihour;
+    doc["imin"] = imin;
+    doc["isec"] = isec;
+    //doc["g3diff"] = sUpTime - g3Time;
+    //doc["g2diff"] = sUpTime - g2Time;
+    serializeJson(doc, *response);
+    request->send(response);
+  });
+
+
+
 server.onNotFound(notFound);
   
 }
