@@ -11,3 +11,6 @@ void initSPIFFS();
 void web_init();
 //void handler_2s_job();
 //void handler_1s_job();
+void rgbled_begin();
+void rgbled_color(int nled, uint8_t red,uint8_t green,uint8_t blue);
+void rgbled_show();

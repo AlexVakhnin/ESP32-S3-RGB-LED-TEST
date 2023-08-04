@@ -3,7 +3,7 @@
 #include <ESPAsyncWebServer.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
-#include "sk.h"
+//#include "sk.h"
 
 //-----------------
 #include "main.h"   //определяет функции во внешних файлах
@@ -13,7 +13,7 @@
 //Управдение внутренним RGB светодиодом
 #define GPIO_RGB_BUILTIN_LED 21
 
-sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // Search for parameter in HTTP POST request
 const char* PARAM_RGB_LED = "rgbled";
@@ -36,10 +36,21 @@ void setup() {
 
    Serial.begin(115200);
 
+   //PSRAM Initialisation
+
+if(psramInit()){
+        Serial.println("\nThe PSRAM is correctly initialized");
+}else{
+        Serial.println("\nPSRAM does not work");
+}
+
   //GRB LED
-  sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
-  sk_6812.color(0,2,1,3,0); //GRBW
-  sk_6812.show();
+  //sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
+  //sk_6812.color(0,2,1,3,0); //GRBW
+  //sk_6812.show();
+  rgbled_begin();
+  rgbled_color(0, 2, 1, 3);
+  rgbled_show();
 
   Serial.println("-----------------------------------------");
   //Serial.println("Serial init speed 115200..");

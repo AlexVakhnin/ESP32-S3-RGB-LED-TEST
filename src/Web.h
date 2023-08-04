@@ -29,6 +29,8 @@ void disp_show();
 //boolean modbus_command(byte mreq[], byte aout[], int count);
 //unsigned int CO2count_mout();
 //unsigned long ABCcount_mabc();
+void rgbled_color(int nled, uint8_t red,uint8_t green,uint8_t blue);
+void rgbled_show();
 
 extern sk sk_6812;
 extern const char* PARAM_RGB_LED;

@@ -25,18 +25,24 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
       Serial.println("POST: PARAM_RGBLED ->"+val);
       if (val =="red") {
         //RED
-        sk_6812.color(0,0,60,0,0); //GRB
-        sk_6812.show();
+        //sk_6812.color(0,0,60,0,0); //GRB
+        //sk_6812.show();
+        rgbled_color(0, 0, 60, 0);
+        rgbled_show();
         Serial.println("LED_BUILTIN = RED");   
       } else if (val =="blue"){
         //BLUE
-        sk_6812.color(0,0,0,60,0); //GRB
-        sk_6812.show();
+        //sk_6812.color(0,0,0,60,0); //GRB
+        //sk_6812.show();
+        rgbled_color(0, 0, 0, 60);
+        rgbled_show();
         Serial.println("LED_BUILTIN = BLUE");   
       } else if (val =="green"){
         //GREEN
-        sk_6812.color(0,60,0,0,0); //GRB
-        sk_6812.show();
+        //sk_6812.color(0,60,0,0,0); //GRB
+        //sk_6812.show();
+        rgbled_color(0, 60, 0, 0);
+        rgbled_show();
         Serial.println("LED_BUILTIN = GREEN");
       } else {
         Serial.println("Error: Value Unknown");
