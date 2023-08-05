@@ -4,6 +4,7 @@
 #include "SPIFFS.h"
 #include <Ticker.h>
 //#include "sk.h"
+#include "ws2812b.h"
 
 //-----------------
 #include "main.h"   //определяет функции во внешних файлах
@@ -14,6 +15,7 @@
 #define GPIO_RGB_BUILTIN_LED 21
 
 //sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ws2812b ws;
 
 // Search for parameter in HTTP POST request
 const char* PARAM_RGB_LED = "rgbled";
@@ -48,9 +50,14 @@ if(psramInit()){
   //sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
   //sk_6812.color(0,2,1,3,0); //GRBW
   //sk_6812.show();
-  rgbled_begin();
-  rgbled_color(0, 2, 1, 3);
-  rgbled_show();
+
+  //rgbled_begin();
+  //rgbled_color(0, 2, 1, 3);
+  //rgbled_show();
+
+  ws.begin(GPIO_RGB_BUILTIN_LED,1);
+  ws.color(0,1,2,3);
+  ws.show();
 
   Serial.println("-----------------------------------------");
   //Serial.println("Serial init speed 115200..");
