@@ -27,7 +27,7 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
         //RED
         //sk_6812.color(0,0,60,0,0); //GRB
         //sk_6812.show();
-        rgbled_color(0, 0, 60, 0);
+        rgbled_color(0, 60, 0, 0);
         rgbled_show();
         Serial.println("LED_BUILTIN = RED");   
       } else if (val =="blue"){
@@ -41,7 +41,7 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
         //GREEN
         //sk_6812.color(0,60,0,0,0); //GRB
         //sk_6812.show();
-        rgbled_color(0, 60, 0, 0);
+        rgbled_color(0, 0, 60, 0);
         rgbled_show();
         Serial.println("LED_BUILTIN = GREEN");
       } else {
