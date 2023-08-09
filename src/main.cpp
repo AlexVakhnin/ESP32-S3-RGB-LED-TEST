@@ -3,6 +3,8 @@
 #include <ESPAsyncWebServer.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
+#include <SPI.h>
+#include <U8g2lib.h>
 //#include "sk.h"
 #include "ws2812b.h"
 
@@ -14,6 +16,28 @@
 //Управдение внутренним RGB светодиодом
 #define GPIO_RGB_BUILTIN_LED 21
 
+
+//ReAssign GPIO for SPI
+//
+//#define MOSI 34
+//#define MISO MISO
+//#define SCK 33
+//#define SS 18 //?????
+
+
+//SPI for SH1106 OLED 128x64
+#define SPI_CLOCK 33
+#define SPI_DATA 34
+#define SPI_CS 18
+#define SPI_DC 17
+#define SPI_RESET 35
+
+
+SPIClass * fspi = NULL;
+
+U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); //Work with fspi !
+//U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
+
 //sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ws2812b ws;
 
@@ -22,12 +46,11 @@ const char* PARAM_RGB_LED = "rgbled";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
-//Для графика
+//Для UpTime
 Ticker hTicker;
 
 //Global Variables
 unsigned long sUpTime;
-//unsigned long sFreeMem; //хранит колич. свободной RAM (куча)
 unsigned long isec = 0; //uptime: sec
 unsigned long imin = 0; //uptime: min
 unsigned long ihour = 0; //uptime: hour
@@ -38,13 +61,26 @@ void setup() {
 
    Serial.begin(115200);
 
-   //PSRAM Initialisation
-
+//PSRAM Initialisation
 if(psramInit()){
         Serial.println("\nThe PSRAM is correctly initialized");
 }else{
         Serial.println("\nPSRAM does not work");
 }
+
+fspi = new SPIClass(FSPI);
+//alternatively route through GPIO pins of your choice
+//Reassign SPI Custom GPIO !!!
+fspi->begin(SPI_CLOCK, -1, SPI_DATA, SPI_CS); //SCLK, MISO, MOSI, SS
+
+//OLED SH1106 128x64
+  u8g2.begin();
+  u8g2.clearBuffer();					// clear the internal memory
+  u8g2.setFont(u8g2_font_ncenB08_tr);	// choose a suitable font
+  u8g2.drawStr(0,10,"Hello World!");	// write something to the internal memory
+  u8g2.sendBuffer();					// transfer internal memory to the display
+
+
 
   //GRB LED
   //sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
@@ -60,10 +96,6 @@ if(psramInit()){
   ws.show();
 
   Serial.println("-----------------------------------------");
-  //Serial.println("Serial init speed 115200..");
-  Serial.printf("Chip Model = %s Rev = %d \r\n", ESP.getChipModel(),ESP.getChipRevision());
-  Serial.printf("Chip Cores = %d \r\n", ESP.getChipCores());
-  //Serial.println("ChipID = ");Serial.println(chipid);
   Serial.printf("Total heap:\t%d \r\n", ESP.getHeapSize());
   Serial.printf("Free heap:\t%d \r\n", ESP.getFreeHeap());
   Serial.printf("Total PSRAM:\t%d \r\n", ESP.getPsramSize());
@@ -77,8 +109,10 @@ if(psramInit()){
   hTicker.attach_ms(5000, get_uptime);
 
 
-  String ssid = "tenda"; //WIFI SSID
-  String pass = "tenda_"; //WIFI PASS
+//  String ssid = "tenda"; //WIFI SSID
+//  String pass = "tenda_"; //WIFI PASS
+  String ssid = "Alpha3"; //WIFI SSID
+  String pass = "asus_"; //WIFI PASS
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
