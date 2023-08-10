@@ -3,7 +3,7 @@
 //void getGraphArr(); //вызывается раз в 5 сек.
 void get_uptime();//вызывается раз в 5 сек.
 //void serial2_clear();
-//void disp_setup();
+void disp_setup();
 //void ip_show(String mod, IPAddress ip);
 //void wifi_show(int i);
 String readFile(fs::FS &fs, const char * path);

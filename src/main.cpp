@@ -16,15 +16,6 @@
 //Управдение внутренним RGB светодиодом
 #define GPIO_RGB_BUILTIN_LED 21
 
-
-//ReAssign GPIO for SPI
-//
-//#define MOSI 34
-//#define MISO MISO
-//#define SCK 33
-//#define SS 18 //?????
-
-
 //SPI for SH1106 OLED 128x64
 #define SPI_CLOCK 33
 #define SPI_DATA 34
@@ -32,11 +23,11 @@
 #define SPI_DC 17
 #define SPI_RESET 35
 
-
 SPIClass * fspi = NULL;
 
 U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); //Work with fspi !
 //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
+
 
 //sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ws2812b ws;
@@ -80,6 +71,8 @@ fspi->begin(SPI_CLOCK, -1, SPI_DATA, SPI_CS); //SCLK, MISO, MOSI, SS
   u8g2.drawStr(0,10,"Hello World!");	// write something to the internal memory
   u8g2.sendBuffer();					// transfer internal memory to the display
 
+  //OLED SSD1306 128X32
+  disp_setup();
 
 
   //GRB LED
@@ -95,12 +88,16 @@ fspi->begin(SPI_CLOCK, -1, SPI_DATA, SPI_CS); //SCLK, MISO, MOSI, SS
   ws.color(0,1,2,3);
   ws.show();
 
+ 
+
   Serial.println("-----------------------------------------");
   Serial.printf("Total heap:\t%d \r\n", ESP.getHeapSize());
   Serial.printf("Free heap:\t%d \r\n", ESP.getFreeHeap());
   Serial.printf("Total PSRAM:\t%d \r\n", ESP.getPsramSize());
   Serial.printf("Free PSRAM:\t%d \r\n", ESP.getFreePsram());
   Serial.printf("Flash size:\t%d (bytes)\r\n", ESP.getFlashChipSize());
+  Serial.println("I2C_SDA= "+String(SDA));
+  Serial.println("I2C_SCL= "+String(SCL));
   Serial.println("-----------------------------------------");
 
   initSPIFFS(); //инициализацич SPIFFS
@@ -127,12 +124,26 @@ Serial.print("IP address: ");Serial.println(WiFi.localIP());
   delay(1000);
   Serial.printf("Free heap after create objects:\t%d \r\n", ESP.getFreeHeap());
 
+
+
 }
 
-
+uint8_t m = 24;
 
 void loop() {
 
-    delay(1000);
-
+  char m_str[3];
+  strcpy(m_str, u8x8_u8toa(m, 2));		/* convert m to a string with two digits */
+  u8g2.firstPage();
+  do {
+    u8g2.setFont(u8g2_font_logisoso62_tn);
+    u8g2.drawStr(0,63,"1");
+    u8g2.drawStr(33,63,":");
+    u8g2.drawStr(50,63,m_str);
+  } while ( u8g2.nextPage() );
+  delay(1000);
+  m++;
+  if ( m == 60 )
+    m = 0;
+    
 }
