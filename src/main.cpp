@@ -3,7 +3,7 @@
 #include <ESPAsyncWebServer.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
-#include <SPI.h>
+//#include <SPI.h>
 #include <U8g2lib.h>
 //#include "sk.h"
 #include "ws2812b.h"
@@ -17,13 +17,13 @@
 #define GPIO_RGB_BUILTIN_LED 21
 
 //SPI for SH1106 OLED 128x64
-#define SPI_CLOCK 33
-#define SPI_DATA 34
+#define SPI_CLOCK 12  //33
+#define SPI_DATA 11   //34
 #define SPI_CS 18
 #define SPI_DC 17
 #define SPI_RESET 35
 
-SPIClass * fspi = NULL;
+//SPIClass * fspi = NULL;
 
 U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); //Work with fspi !
 //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
@@ -59,16 +59,16 @@ if(psramInit()){
         Serial.println("\nPSRAM does not work");
 }
 
-fspi = new SPIClass(FSPI);
+//fspi = new SPIClass(FSPI);
 //alternatively route through GPIO pins of your choice
 //Reassign SPI Custom GPIO !!!
-fspi->begin(SPI_CLOCK, -1, SPI_DATA, SPI_CS); //SCLK, MISO, MOSI, SS
+//fspi->begin(SPI_CLOCK, -1/*36*/, SPI_DATA/*, SPI_CS*/); //SCLK, MISO, MOSI, SS
 
 //OLED SH1106 128x64
   u8g2.begin();
   u8g2.clearBuffer();					// clear the internal memory
   u8g2.setFont(u8g2_font_ncenB08_tr);	// choose a suitable font
-  u8g2.drawStr(0,10,"Hello World!");	// write something to the internal memory
+  u8g2.drawStr(0,10,"Connectin Wi-Fi..");	// write something to the internal memory
   u8g2.sendBuffer();					// transfer internal memory to the display
 
   //OLED SSD1306 128X32
@@ -98,6 +98,10 @@ fspi->begin(SPI_CLOCK, -1, SPI_DATA, SPI_CS); //SCLK, MISO, MOSI, SS
   Serial.printf("Flash size:\t%d (bytes)\r\n", ESP.getFlashChipSize());
   Serial.println("I2C_SDA= "+String(SDA));
   Serial.println("I2C_SCL= "+String(SCL));
+  Serial.println("SPI_SCK= "+String(SCK));
+  Serial.println("SPI_MOSI= "+String(MOSI));
+  Serial.println("SPI_MISO= "+String(MISO));
+  Serial.println("SPI_SS= "+String(SS));
   Serial.println("-----------------------------------------");
 
   initSPIFFS(); //инициализацич SPIFFS
@@ -121,7 +125,7 @@ Serial.print("IP address: ");Serial.println(WiFi.localIP());
   web_init();
   server.begin();
 
-  delay(1000);
+  delay(100);
   Serial.printf("Free heap after create objects:\t%d \r\n", ESP.getFreeHeap());
 
 
@@ -137,7 +141,7 @@ void loop() {
   u8g2.firstPage();
   do {
     u8g2.setFont(u8g2_font_logisoso62_tn);
-    u8g2.drawStr(0,63,"1");
+    u8g2.drawStr(0,63,"2");
     u8g2.drawStr(33,63,":");
     u8g2.drawStr(50,63,m_str);
   } while ( u8g2.nextPage() );
