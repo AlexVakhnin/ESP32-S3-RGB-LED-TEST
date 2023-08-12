@@ -17,7 +17,7 @@ sk_6812.show(); //записать данные в ленту
 #ifndef SK_H
 #define SK_H 1
 
-
+#include <Arduino.h>
 #include "driver/rmt.h"
 
 

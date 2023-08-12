@@ -3,6 +3,8 @@
 #include <ESPAsyncWebServer.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 //#include <SPI.h>
 #include <U8g2lib.h>
 //#include "sk.h"
@@ -12,9 +14,17 @@
 #include "main.h"   //определяет функции во внешних файлах
 //-----------------
 
+#define NTP_OFFSET  60 * 60 * 3 // In seconds +3h
+#define NTP_INTERVAL 5 * 60 * 1000    // In miliseconds
+//#define NTP_ADDRESS  "1.asia.pool.ntp.org"
+#define NTP_ADDRESS  "1.ua.pool.ntp.org"
 
-//Управдение внутренним RGB светодиодом
-#define GPIO_RGB_BUILTIN_LED 21
+  WiFiUDP ntpUDP;
+  NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
+
+
+//Управдение RGB светодиодной лентой
+#define GPIO_RGB_BUILTIN_LED 7
 
 //SPI for SH1106 OLED 128x64
 #define SPI_CLOCK 12  //33
@@ -22,8 +32,6 @@
 #define SPI_CS 18
 #define SPI_DC 17
 #define SPI_RESET 35
-
-//SPIClass * fspi = NULL;
 
 U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); //Work with fspi !
 //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
@@ -59,11 +67,6 @@ if(psramInit()){
         Serial.println("\nPSRAM does not work");
 }
 
-//fspi = new SPIClass(FSPI);
-//alternatively route through GPIO pins of your choice
-//Reassign SPI Custom GPIO !!!
-//fspi->begin(SPI_CLOCK, -1/*36*/, SPI_DATA/*, SPI_CS*/); //SCLK, MISO, MOSI, SS
-
 //OLED SH1106 128x64
   u8g2.begin();
   u8g2.clearBuffer();					// clear the internal memory
@@ -74,7 +77,6 @@ if(psramInit()){
   //OLED SSD1306 128X32
   disp_setup();
 
-
   //GRB LED
   //sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
   //sk_6812.color(0,2,1,3,0); //GRBW
@@ -84,7 +86,7 @@ if(psramInit()){
   //rgbled_color(0, 2, 1, 3);
   //rgbled_show();
 
-  ws.begin(GPIO_RGB_BUILTIN_LED,1);
+  ws.begin(GPIO_RGB_BUILTIN_LED,5);
   ws.color(0,1,2,3);
   ws.show();
 
@@ -121,6 +123,8 @@ if(psramInit()){
   }
 Serial.print("IP address: ");Serial.println(WiFi.localIP());
 
+  timeClient.begin();  //NTP Client START
+
   // Route for root / web page
   web_init();
   server.begin();
@@ -132,22 +136,39 @@ Serial.print("IP address: ");Serial.println(WiFi.localIP());
 
 }
 
-uint8_t m = 24;
+uint8_t m = 0;
 
 void loop() {
 
-  char m_str[3];
-  strcpy(m_str, u8x8_u8toa(m, 2));		/* convert m to a string with two digits */
+timeClient.update();
+String formattedTime = timeClient.getFormattedTime();
+//Serial.println(formattedTime);
+String smin = formattedTime.substring(3,5);
+String s2hours = formattedTime.substring(1,2);
+String s1hours = formattedTime.substring(0,1);
+if(s1hours == "2"){
+    disp_2();
+} else if(s1hours == "1"){
+    disp_1();
+} else {
+    disp_0();
+}
+  //char m_str[3];
+  //strcpy(m_str, u8x8_u8toa(m, 2));		/* convert m to a string with two digits */
   u8g2.firstPage();
   do {
     u8g2.setFont(u8g2_font_logisoso62_tn);
-    u8g2.drawStr(0,63,"2");
+    u8g2.drawStr(0,63,s2hours.c_str());
     u8g2.drawStr(33,63,":");
-    u8g2.drawStr(50,63,m_str);
+    u8g2.drawStr(50,63,smin.c_str());
   } while ( u8g2.nextPage() );
+
+  ws.test(m);
+  ws.show();
+  //Serial.println(m);
   delay(1000);
   m++;
-  if ( m == 60 )
+  if ( m == 5 )
     m = 0;
     
 }

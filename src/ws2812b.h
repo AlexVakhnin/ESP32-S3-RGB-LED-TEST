@@ -91,6 +91,30 @@ rmtWrite(_rmt_send, _led_data, _nbit);
 delay(100);
 }
 
+//погасить всю ленту светодиодов
+void clear( void ){
+
+for ( int i =0; i < _nled;++i ) {  //проход о всей ленте
+  color(i,0,0,0);
+}
+//show();
+//delay(10);
+}
+
+void test(int tn){
+    clear();
+    if(tn==0){
+        color(tn,60,0,0);
+    }else if(tn==1){
+        color(tn,0,60,0);
+    }else if (tn==2){
+        color(tn,0,0,60);
+    }else if(tn==3){
+        color(tn,20,20,20);
+    }else{
+        color(tn,0,20,20);
+    }
+}
 
 private:
 

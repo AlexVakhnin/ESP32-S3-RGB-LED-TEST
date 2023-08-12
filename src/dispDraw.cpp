@@ -12,6 +12,13 @@
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+
+// print "0"
+void disp_0(){
+    display.clearDisplay();
+    display.display();//show
+}
+
 // print "1"
 void disp_1(){
   display.clearDisplay();
@@ -26,9 +33,10 @@ void disp_1(){
 }
 // print "2"
 void disp_2(){
+  display.clearDisplay();
   //display.drawRect(0,43,32,83,WHITE);//рамка знакоместа
 
- int y0= 43;
+int y0= 43;
 display.fillCircle(15, y0+15, 15, WHITE);  //внешний круг
 display.fillCircle(15, y0+15, 7, BLACK);
 display.fillTriangle(0, y0+30, 15, y0+15, 31,  y0+30, BLACK);//X1,Y1,X2,Y2,X3,Y3
@@ -69,9 +77,9 @@ void disp_setup(){
 
   //display.drawRect(0,43,32,83,WHITE);
   //display.drawRect(0,0,32,32,WHITE);
-  //display.display();//show
-  delay(1000);
+  display.display();//show
+  //delay(1000);
   //disp_1();
-  disp_2();
+  //disp_2();
 
 }
