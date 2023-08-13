@@ -163,8 +163,8 @@ if(s1hours == "2"){
     u8g2.drawStr(50,63,smin.c_str());
   } while ( u8g2.nextPage() );
 
-  ws.test(m);
-  ws.show();
+  ws.test(m);  //LED STRIP SHOW !
+ 
   //Serial.println(m);
   delay(1000);
   m++;
