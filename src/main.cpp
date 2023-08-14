@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
+#include <AsyncElegantOTA.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
 #include <NTPClient.h>
@@ -37,7 +38,7 @@ U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); 
 //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
 
 
-//sk sk_6812; //class sk create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//class ws2812b
 ws2812b ws;
 
 // Search for parameter in HTTP POST request
@@ -71,21 +72,13 @@ if(psramInit()){
   u8g2.begin();
   u8g2.clearBuffer();					// clear the internal memory
   u8g2.setFont(u8g2_font_ncenB08_tr);	// choose a suitable font
-  u8g2.drawStr(0,10,"Connectin Wi-Fi..");	// write something to the internal memory
+  u8g2.drawStr(0,10,"Connecting Wi-Fi..");	// write something to the internal memory
   u8g2.sendBuffer();					// transfer internal memory to the display
 
   //OLED SSD1306 128X32
   disp_setup();
 
-  //GRB LED
-  //sk_6812.begin( GPIO_RGB_BUILTIN_LED, 1);  //init RGB LED class 
-  //sk_6812.color(0,2,1,3,0); //GRBW
-  //sk_6812.show();
-
-  //rgbled_begin();
-  //rgbled_color(0, 2, 1, 3);
-  //rgbled_show();
-
+  //ws2812b strip
   ws.begin(GPIO_RGB_BUILTIN_LED,5);
   ws.color(0,1,2,3);
   ws.show();
@@ -116,6 +109,7 @@ if(psramInit()){
 //  String pass = "tenda_"; //WIFI PASS
   String ssid = "Alpha3"; //WIFI SSID
   String pass = "asus_"; //WIFI PASS
+  //*******************************************************
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
@@ -127,13 +121,11 @@ Serial.print("IP address: ");Serial.println(WiFi.localIP());
 
   // Route for root / web page
   web_init();
+  AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
   server.begin();
 
   delay(100);
   Serial.printf("Free heap after create objects:\t%d \r\n", ESP.getFreeHeap());
-
-
-
 }
 
 uint8_t m = 0;
@@ -153,8 +145,6 @@ if(s1hours == "2"){
 } else {
     disp_0();
 }
-  //char m_str[3];
-  //strcpy(m_str, u8x8_u8toa(m, 2));		/* convert m to a string with two digits */
   u8g2.firstPage();
   do {
     u8g2.setFont(u8g2_font_logisoso62_tn);
