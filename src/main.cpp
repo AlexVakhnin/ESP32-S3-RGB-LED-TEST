@@ -23,7 +23,6 @@
   WiFiUDP ntpUDP;
   NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 
-
 //Управдение RGB светодиодной лентой
 #define GPIO_RGB_BUILTIN_LED 7
 
@@ -55,6 +54,8 @@ unsigned long isec = 0; //uptime: sec
 unsigned long imin = 0; //uptime: min
 unsigned long ihour = 0; //uptime: hour
 unsigned long iday = 0; //uptime: day
+
+//boolean ntp_sync_flag = false; //true -> синхроонизация NTP успешна
 
 
 void setup() {
@@ -107,8 +108,8 @@ if(psramInit()){
 
 //  String ssid = "tenda"; //WIFI SSID
 //  String pass = "tenda_"; //WIFI PASS
-  String ssid = "Alpha3"; //WIFI SSID
-  String pass = "asus_"; //WIFI PASS
+  String ssid = "tenda"; //WIFI SSID
+  String pass = "tenda_"; //WIFI PASS
   //*******************************************************
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
@@ -134,6 +135,7 @@ void loop() {
 
 timeClient.update();
 String formattedTime = timeClient.getFormattedTime();
+
 //Serial.println(formattedTime);
 String smin = formattedTime.substring(3,5);
 String s2hours = formattedTime.substring(1,2);

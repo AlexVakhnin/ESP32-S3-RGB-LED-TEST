@@ -18,17 +18,26 @@
             <span id="freemem">%freemem%</span>
             <span id="iday">0</span>
             <span id="ihour">0</span>:<span id="imin">0</span>.<span id="isec">0</span>
-        </p>      
-        <p class="calibr-pbtn">
-		 <button type="button" class="calibr" onclick="built_in_red()">Builtin_led RED</button><br>
-		 <button type="button" class="calibr" onclick="built_in_blue()">Builtin_led BLUE</button><br>
-		 <button type="button" class="calibr" onclick="built_in_green()">Builtin_led GREEN</button><br>
-		 <button type="button" class="calibr" onclick="reserved()">Reserved</button>
         </p>
-            <p>
+        <p>
+            <label for="ssid">SSID</label>
+            <input type="text" id ="ssid" name="ssid" value="%ssid%"><br>
+            <label for="pass">Password</label>
+            <input type="text" id ="pass" name="pass" value="%pass%"><br>           
+        </p>        
+		      <button type="button" class="wifiman" onclick="post_ssid()">Save</button>
+              <p>
+                <label for="ntpser">NTPServ</label>
+                <input type="text" id ="ntpser" name="ntpser" value="%ntpser%"><br>
+                <label for="tzone">TimeZone</label>
+                <input type="text" id ="tzone" name="tzone" value="%tzone%"><br>           
+            </p>        
+                  <button type="button" class="wifiman" onclick="post_ntpser()">Save</button>
+                
+        <p>
                 <a href="/update"><img src="elegantota.png" width="180" 
                 height="40"></a><br><br>
-            </p>
+        </p>
       </div>
   </div>
 
