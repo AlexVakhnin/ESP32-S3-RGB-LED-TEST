@@ -40,7 +40,8 @@ sk(void){} //конструктор
 int begin( int pin, int count){
 
 //глобальные переменные (свойства объекта)
-_bitcount = count*32; //количество бит на выдачу
+_bitcount = count*24; //количество бит на выдачу RGB leds (3 байта) !!!!!!!!!!!!!!!
+//_bitcount = count*32; //RGBW leds (4 байта)
 _ledpin = pin;  //номер GPIO esp32 
 _ledcount = count; //количество светодиодов в ленте
 _brightness = 100; //яркость глобальный процент
@@ -53,7 +54,7 @@ int rc;
 
     _skstrip = (rmt_item32_t *)calloc(  _bitcount, sizeof( rmt_item32_t ) );
 
-    //Заполняем структуру типа rmt_config_t определенную в драйвере -> в локальное свойство объекта
+    //Заполняем структуру типа rmt_config_t определенную в драйвере для правильной настройки железа
      skconfig.rmt_mode = RMT_MODE_TX; //мы передаем..
      skconfig.channel = RMT_CHANNEL_1;  //канал RMT = 1
      skconfig.gpio_num = (gpio_num_t)_ledpin; //мапируем GPIO для работы RMT
@@ -73,27 +74,24 @@ int rc;
 }
 
 /*-------------------------------------------------------------------------*/
-//собираем 4 байта в одну 32-битную переменную
-uint32_t getcolor( uint8_t r,uint8_t g,uint8_t b,uint8_t w ){
+//собираем 3 байта в одну 24-битную переменную
+uint32_t getcolor( uint8_t r,uint8_t g,uint8_t b){
 
 uint32_t  kleur=0;
 
-kleur |= ((uint32_t)g<<24);
 kleur |= ((uint32_t)r<<16);
-kleur |= ((uint32_t)b<<8);
-kleur |= (uint32_t)w; 
+kleur |= ((uint32_t)g<<8);
+kleur |= (uint32_t)b;
 
 return( kleur );
 }
 
-/*-------------------------------------------------------------------------*/
-//из 32-х битного целого выделяем 4 байта (по ссылкам..)
-uint32_t breakcolor( uint32_t kleur, uint8_t *r,uint8_t *g,uint8_t *b,uint8_t *w ){
+//из 24-х битного целого выделяем 3 байта (по ссылкам..)
+uint32_t breakcolor( uint32_t kleur, uint8_t *r,uint8_t *g,uint8_t *b ){
 
-*g = (kleur >> 24 )&0xff;
 *r = (kleur >> 16 )&0xff;
-*b = (kleur >> 8 )&0xff;
-*w = kleur&0xff;
+*g = (kleur >> 8 )&0xff;
+*b = kleur&0xff;
 
 return( kleur );
 }
@@ -101,10 +99,10 @@ return( kleur );
 /*-------------------------------------------------------------------------*/
 //Устанавливаем цвет с помощью одной 32-битной переменной
 void color32( int led, uint32_t kleur, int brightness = -1  ){
-uint8_t r,g,b,w;
+uint8_t r,g,b;
 
-breakcolor( kleur,&r,&g,&b,&w); //заполняем rgbw из uint32_t kleur
-color( led, r,g,b,w, brightness);
+breakcolor( kleur,&r,&g,&b); //заполняем rgbw из uint32_t kleur
+color( led, r,g,b, brightness);
   
 }
 

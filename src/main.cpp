@@ -15,10 +15,10 @@
 #include "main.h"   //определяет функции во внешних файлах
 //-----------------
 
-#define NTP_OFFSET  60 * 60 * 3 // In seconds +3h
-#define NTP_INTERVAL 5 * 60 * 1000    // In miliseconds
+#define NTP_OFFSET  60 * 60 * 3 // In seconds +2h (+3)
+#define NTP_INTERVAL 15 * 60 * 1000    // In miliseconds (15 min)
 //#define NTP_ADDRESS  "1.asia.pool.ntp.org"
-#define NTP_ADDRESS  "1.ua.pool.ntp.org"
+#define NTP_ADDRESS  "pool.ntp.org"   //"1.ua.pool.ntp.org"
 
   WiFiUDP ntpUDP;
   NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
@@ -106,10 +106,10 @@ if(psramInit()){
   hTicker.attach_ms(5000, get_uptime);
 
 
-//  String ssid = "tenda"; //WIFI SSID
-//  String pass = "tenda_"; //WIFI PASS
   String ssid = "tenda"; //WIFI SSID
   String pass = "tenda_"; //WIFI PASS
+ // String ssid = "Alpha3"; //WIFI SSID
+  //String pass = "asus_"; //WIFI PASS
   //*******************************************************
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
