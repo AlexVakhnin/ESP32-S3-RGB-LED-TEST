@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <WiFi.h>
+//#include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
 #include "SPIFFS.h"
@@ -36,7 +36,6 @@
 U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); //Work with fspi !
 //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, SPI_CLOCK, SPI_DATA, SPI_CS, SPI_DC, SPI_RESET); //Work !
 
-
 //class ws2812b
 ws2812b ws;
 
@@ -62,14 +61,14 @@ void setup() {
 
    Serial.begin(115200);
 
-//PSRAM Initialisation
-if(psramInit()){
+  //PSRAM Initialisation
+  if(psramInit()){
         Serial.println("\nThe PSRAM is correctly initialized");
-}else{
+  }else{
         Serial.println("\nPSRAM does not work");
-}
+  }
 
-//OLED SH1106 128x64
+  //OLED SH1106 128x64
   u8g2.begin();
   u8g2.clearBuffer();					// clear the internal memory
   u8g2.setFont(u8g2_font_ncenB08_tr);	// choose a suitable font
@@ -106,17 +105,8 @@ if(psramInit()){
   hTicker.attach_ms(5000, get_uptime);
 
 
-  String ssid = "tenda"; //WIFI SSID
-  String pass = "tenda_"; //WIFI PASS
- // String ssid = "Alpha3"; //WIFI SSID
-  //String pass = "asus_"; //WIFI PASS
-  //*******************************************************
-  WiFi.begin(ssid, pass);
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-  }
-Serial.print("IP address: ");Serial.println(WiFi.localIP());
+  //Инициализация WIFI
+  wifi_init();
 
   timeClient.begin();  //NTP Client START
 

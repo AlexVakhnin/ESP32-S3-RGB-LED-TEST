@@ -17,3 +17,4 @@ void web_init();
 void rgbled_begin();
 void rgbled_color(int nled, uint8_t red,uint8_t green,uint8_t blue);
 void rgbled_show();
+void wifi_init();
