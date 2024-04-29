@@ -5,15 +5,15 @@
 //extern String ds1; //дисплей-строка 1
 //extern String ds2; //дисплей-строка 2
 
-//Local Variables
+//Список наших сетей
 String ssid1 = "tenda"; //WIFI SSID
 String pass1 = "tenda_"; //WIFI PASS
 String ssid2 = "Alpha3"; //WIFI SSID
 String pass2 = "asus_"; //WIFI PASS
+
 boolean flag_ip = false;
 
-
-//Определяем условный номер сети(ssid) необходимой нам.
+//Определяем условный номер сети(ssid) из списка наших сетей.
 //результат 0-нет наших сетей ; 1=сеть ssid1 ; 2- сеть ssid2
 int wifi_scan(){
     int res = 0; 
