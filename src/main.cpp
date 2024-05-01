@@ -1,27 +1,14 @@
 #include <Arduino.h>
-//#include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
 #include "SPIFFS.h"
 #include <Ticker.h>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
-//#include <SPI.h>
 #include <U8g2lib.h>
-//#include "sk.h"
 #include "ws2812b.h"
 
 //-----------------
 #include "main.h"   //определяет функции во внешних файлах
 //-----------------
-
-#define NTP_OFFSET  60 * 60 * 3 // In seconds +2h (+3)
-#define NTP_INTERVAL 15 * 60 * 1000    // In miliseconds (15 min)
-//#define NTP_ADDRESS  "1.asia.pool.ntp.org"
-#define NTP_ADDRESS  "pool.ntp.org"   //"1.ua.pool.ntp.org"
-
-  WiFiUDP ntpUDP;
-  NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 
 //Управдение RGB светодиодной лентой
 #define GPIO_RGB_BUILTIN_LED 7
@@ -53,9 +40,7 @@ unsigned long isec = 0; //uptime: sec
 unsigned long imin = 0; //uptime: min
 unsigned long ihour = 0; //uptime: hour
 unsigned long iday = 0; //uptime: day
-
-//boolean ntp_sync_flag = false; //true -> синхроонизация NTP успешна
-
+String formatted_time = "--:--:--";
 
 void setup() {
 
@@ -99,7 +84,7 @@ void setup() {
   Serial.println("SPI_SS= "+String(SS));
   Serial.println("-----------------------------------------");
 
-  initSPIFFS(); //инициализацич SPIFFS
+  initSPIFFS(); //инициализация SPIFFS
 
     //инициализация прерывания (5 sec.)
   hTicker.attach_ms(5000, get_uptime);
@@ -108,7 +93,8 @@ void setup() {
   //Инициализация WIFI
   wifi_init();
 
-  timeClient.begin();  //NTP Client START
+  //NTP Client START
+  time_init();
 
   // Route for root / web page
   web_init();
@@ -123,13 +109,12 @@ uint8_t m = 0;
 
 void loop() {
 
-timeClient.update();
-String formattedTime = timeClient.getFormattedTime();
+handle_time(); // NTP Time -> formatted_time `hh:mm:ss`
 
-//Serial.println(formattedTime);
-String smin = formattedTime.substring(3,5);
-String s2hours = formattedTime.substring(1,2);
-String s1hours = formattedTime.substring(0,1);
+String smin = formatted_time.substring(3,5);
+String s2hours = formatted_time.substring(1,2);
+String s1hours = formatted_time.substring(0,1);
+//первая цифра
 if(s1hours == "2"){
     disp_2();
 } else if(s1hours == "1"){
