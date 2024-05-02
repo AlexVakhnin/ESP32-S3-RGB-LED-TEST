@@ -1,7 +1,4 @@
 #include <Arduino.h>
-#include <ESPAsyncWebServer.h>
-#include <AsyncElegantOTA.h>
-#include "SPIFFS.h"
 #include <Ticker.h>
 #include <U8g2lib.h>
 #include "ws2812b.h"
@@ -26,11 +23,7 @@ U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, SPI_CS, SPI_DC, SPI_RESET); 
 //class ws2812b
 ws2812b ws;
 
-// Search for parameter in HTTP POST request
-const char* PARAM_RGB_LED = "rgbled";
 
-// Create AsyncWebServer object on port 80
-AsyncWebServer server(80);
 //Для UpTime
 Ticker hTicker;
 
@@ -98,8 +91,6 @@ void setup() {
 
   // Route for root / web page
   web_init();
-  AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
-  server.begin();
 
   delay(100);
   Serial.printf("Free heap after create objects:\t%d \r\n", ESP.getFreeHeap());

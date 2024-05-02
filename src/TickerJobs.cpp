@@ -1,5 +1,12 @@
 
-#include "Web.h"  //внешние функции
+//внешние переменные
+
+extern unsigned long sUpTime;
+extern unsigned long ihour;
+extern unsigned long imin;
+extern unsigned long isec;
+extern unsigned long iday;
+
 
 //вычислить uptime д/ч/м/с (вызывается с периодом 5 сек)
 void get_uptime(){

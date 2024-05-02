@@ -7,9 +7,9 @@
 
 //Наш список сетей
 String ssid1 = "tenda"; //WIFI SSID
-String pass1 = "tenda_"; //WIFI PASS
+String pass1 = "tenda_639122"; //WIFI PASS
 String ssid2 = "Alpha3"; //WIFI SSID
-String pass2 = "asus_"; //WIFI PASS
+String pass2 = "asus_639122"; //WIFI PASS
 
 boolean flag_ip = false;
 
