@@ -1,17 +1,17 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include "SPIFFS.h"
+#include <U8g2lib.h>
 
-//Global Variables
-//extern String ds1; //дисплей-строка 1
-//extern String ds2; //дисплей-строка 2
-extern const char* ssid1Path;
+//External Variables and functions
+extern const char* ssid1Path; //Web.cpp
 extern const char* pass1Path;
 extern const char* ssid2Path;
 extern const char* pass2Path;
-extern String readFile(fs::FS &fs, const char * path);
+extern String readFile(fs::FS &fs, const char * path); //SPIFFS.cpp
+extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2; //main.cpp
 
-//Наш список сетей
+//Список сетей (local variables)
 String ssid1 = ""; //WIFI SSID
 String pass1 = ""; //WIFI PASS
 String ssid2 = ""; //WIFI SSID
@@ -19,8 +19,19 @@ String pass2 = ""; //WIFI PASS
 
 boolean flag_ip = false;
 
-//Определяем условный номер сети(ssid) из нашего списка сетей.
-//результат 0-нет наших сетей ; 1=сеть ssid1 ; 2- сеть ssid2
+//показать 2-ю строку на 128x64 дисплее (u8g2)
+void u8g2_print2(String str){
+  u8g2.drawStr(0,28+4,str.c_str());
+  u8g2.sendBuffer();
+}
+//показать 3-ю строку на 128x64 дисплее (u8g2)
+void u8g2_print3(String str){
+  u8g2.drawStr(0,46+4,str.c_str());
+  u8g2.sendBuffer();
+}
+
+//Определяем условный номер сети(ssid) из списка сетей.
+//результат 0-нет сетей из списка ; 1=сеть ssid1 ; 2- сеть ssid2
 int wifi_scan(){
     int res = 0; 
     Serial.println("Scan start");
@@ -53,12 +64,11 @@ void wifi_init(){
 
   String ssid="No Netw..";
   String pass="";
-  int ind = wifi_scan(); //номер сети из нашего списка
+  int ind = wifi_scan(); //номер сети из списка
   if (ind==1){ssid=ssid1;pass=pass1;}
   else if (ind==2){ssid=ssid2;pass=pass2;}
 
-  //ds1 = ssid; //сеть которую нашли.. на дисплей
-  delay(3000);
+  u8g2_print2(ssid); //SSID на дисплей
   Serial.println("ssid="+ssid);
   WiFi.begin(ssid, pass);
   while (WiFi.status() != WL_CONNECTED) {
@@ -68,8 +78,9 @@ void wifi_init(){
   Serial.println();
   IPAddress ip = WiFi.localIP();
   Serial.print("IP address: ");Serial.println(ip);
-  //ds1 = "IP.."+String(ip[2])+"."+String(ip[3]); //на дисплей
-
+  String s_ip = "IP.."+String(ip[2])+"."+String(ip[3]); //на дисплей
+  u8g2_print3(s_ip); //IP на дисплей
+  delay(8000);
 } 
 
 void handle_wifi(){

@@ -49,8 +49,8 @@ void setup() {
   //OLED SH1106 128x64
   u8g2.begin();
   u8g2.clearBuffer();					// clear the internal memory
-  u8g2.setFont(u8g2_font_ncenB08_tr);	// choose a suitable font
-  u8g2.drawStr(0,10,"Connecting Wi-Fi..");	// write something to the internal memory
+  u8g2.setFont(u8g2_font_ncenB10_tr);	// choose a suitable font
+  u8g2.drawStr(0,10+4,"Connecting WIFI");	// write something to the internal memory
   u8g2.sendBuffer();					// transfer internal memory to the display
 
   //OLED SSD1306 128X32

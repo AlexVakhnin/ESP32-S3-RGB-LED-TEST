@@ -11,6 +11,8 @@ const char* PARAM_SSID1 = "ssid1";
 const char* PARAM_PASS1 = "pass1";
 const char* PARAM_SSID2 = "ssid2";
 const char* PARAM_PASS2 = "pass2";
+const char* PARAM_RESET = "reset";
+
 const char* ssid1Path = "/ssid1.txt"; //SPIFFS file name
 const char* pass1Path = "/pass1.txt"; //SPIFFS file name
 const char* ssid2Path = "/ssid2.txt"; //SPIFFS file name
@@ -55,6 +57,12 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
       Serial.println(val);
       writeFile(SPIFFS, pass2Path, val.c_str());    
     }
+    if (keyValue.key() == PARAM_RESET){
+      String val = keyValue.value().as<const char*>();
+      Serial.print("RESET to: ");
+      Serial.println(val);
+      if(val.equals("yes")){ESP.restart();};    
+    }
 
   }
 
@@ -91,13 +99,7 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
   server.on("/elegantota.png", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/elegantota.png", "image/png");
   });
- 
-  server.on("/reboot", HTTP_GET, [](AsyncWebServerRequest *request){    
-    request->send(200, "text/html", "<h1>SOFT RESET..</h1>");
-    delay(3000);
-    ESP.restart();
-  });
-
+  
   //Это ответ сервера на AJAX запрос из WEB страницы"
   server.on("/jsonstate", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncResponseStream *response = request->beginResponseStream("application/json");    

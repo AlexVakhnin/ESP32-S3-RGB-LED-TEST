@@ -31,6 +31,7 @@
             <input type="text" id ="pass2" name="pass2" value="%pass2%"><br>           
         </p>        
                   <button type="button" class="wifiman" onclick="post_form()">Save</button>
+                  <button type="button" class="wifiman" onclick="post_reset()">Reset</button>
                 
         <p>
                 <a href="/update"><img src="elegantota.png" width="180" 
@@ -81,6 +82,38 @@ return false;
 }
 
 
+function post_reset(){
+
+let postObj = { 
+    reset: 'yes'  
+}
+let post = JSON.stringify(postObj)
+
+fetch("/posts", {
+    method: 'post',
+    body: post,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+// (C) RETURN SERVER RESPONSE AS TEXT
+.then((res) => {
+   if (res.status != 200) { throw new Error("Bad Server Response"); }
+   return res.text();
+})
+// (D) SERVER RESPONSE
+.then((res) => {
+    console.log(res);
+	  alert(res);
+})
+// (E) HANDLE ERRORS - OPTIONAL
+.catch((error) => {
+    console.log(error)
+});
+// (F) PREVENT FORM SUBMIT
+return false;
+}
 
 
 function reserved(){

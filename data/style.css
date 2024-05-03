@@ -86,6 +86,8 @@ button {
   border-radius: 4px;
   /*transition-duration: 0.4s;*/
   margin-bottom: 36px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .wifiman {
   cursor: pointer;	
