@@ -61,7 +61,7 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
       String val = keyValue.value().as<const char*>();
       Serial.print("RESET to: ");
       Serial.println(val);
-      if(val.equals("yes")){ESP.restart();};    
+      if(val.equals("yes")){delay(3000);ESP.restart();};    
     }
 
   }

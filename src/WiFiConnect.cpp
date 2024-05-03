@@ -18,6 +18,8 @@ String ssid2 = ""; //WIFI SSID
 String pass2 = ""; //WIFI PASS
 
 boolean flag_ip = false;
+boolean flag_apn = false;//флаг APN
+IPAddress ip;
 
 //показать 2-ю строку на 128x64 дисплее (u8g2)
 void u8g2_print2(String str){
@@ -71,20 +73,37 @@ void wifi_init(){
   u8g2_print2(ssid); //SSID на дисплей
   Serial.println("ssid="+ssid);
   WiFi.begin(ssid, pass);
+  int count = 12;
   while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
+      count--;
+      delay(1000);
+      Serial.print(".");//индикация
+      if (count <= 0){
+        flag_apn = true;
+        WiFi.disconnect(true);
+        delay(2000);
+        break;  //выходим из WHILE
+      }
   }
-  Serial.println();
-  IPAddress ip = WiFi.localIP();
+  if(flag_apn) {
+    //создаем AP
+    Serial.println("Creating Access Point..");
+    WiFi.softAP("Soft-AP-ESP32", "11111111"); // NULL sets an open Access Point
+    u8g2_print2("SoftAP:11111111");
+    ip = WiFi.softAPIP();
+    Serial.print("AP IP address: ");Serial.println(ip);
+  } else {
+    Serial.println();
+    ip = WiFi.localIP();
+  }
   Serial.print("IP address: ");Serial.println(ip);
   String s_ip = "IP.."+String(ip[2])+"."+String(ip[3]); //на дисплей
   u8g2_print3(s_ip); //IP на дисплей
-  delay(8000);
+  delay(6000);
 } 
 
-void handle_wifi(){
 
+void handle_wifi(){
   if (WiFi.status() != WL_CONNECTED)  {
     Serial.print(millis());
     Serial.println(" Reconnecting to WiFi...");
