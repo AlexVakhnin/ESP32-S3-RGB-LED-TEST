@@ -1,15 +1,21 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include "SPIFFS.h"
 
 //Global Variables
 //extern String ds1; //дисплей-строка 1
 //extern String ds2; //дисплей-строка 2
+extern const char* ssid1Path;
+extern const char* pass1Path;
+extern const char* ssid2Path;
+extern const char* pass2Path;
+extern String readFile(fs::FS &fs, const char * path);
 
 //Наш список сетей
-String ssid1 = "tenda"; //WIFI SSID
-String pass1 = "tenda_"; //WIFI PASS
-String ssid2 = "Alpha3"; //WIFI SSID
-String pass2 = "asus_"; //WIFI PASS
+String ssid1 = ""; //WIFI SSID
+String pass1 = ""; //WIFI PASS
+String ssid2 = ""; //WIFI SSID
+String pass2 = ""; //WIFI PASS
 
 boolean flag_ip = false;
 
@@ -38,6 +44,13 @@ int wifi_scan(){
 }
 
 void wifi_init(){
+
+  //загрузим список сетей из файловой системы
+  ssid1 = readFile(SPIFFS, ssid1Path);
+  pass1 = readFile(SPIFFS, pass1Path);
+  ssid2 = readFile(SPIFFS, ssid2Path);
+  pass2 = readFile(SPIFFS, pass2Path);
+
   String ssid="No Netw..";
   String pass="";
   int ind = wifi_scan(); //номер сети из нашего списка

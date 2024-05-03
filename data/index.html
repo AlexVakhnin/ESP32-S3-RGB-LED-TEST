@@ -20,19 +20,17 @@
             <span id="ihour">0</span>:<span id="imin">0</span>.<span id="isec">0</span>
         </p>
         <p>
-            <label for="ssid">SSID</label>
-            <input type="text" id ="ssid" name="ssid" value="%ssid%"><br>
-            <label for="pass">Password</label>
-            <input type="text" id ="pass" name="pass" value="%pass%"><br>           
+            <label for="ssid">SSID1</label>
+            <input type="text" id ="ssid1" name="ssid1" value="%ssid1%"><br>
+            <label for="pass">PASS1</label>
+            <input type="text" id ="pass1" name="pass1" value="%pass1%"><br>           
+                
+            <label for="ntpser">SSID2</label>
+            <input type="text" id ="ssid2" name="ssid2" value="%ssid2%"><br>
+            <label for="tzone">PASS2</label>
+            <input type="text" id ="pass2" name="pass2" value="%pass2%"><br>           
         </p>        
-		      <button type="button" class="wifiman" onclick="post_ssid()">Save</button>
-              <p>
-                <label for="ntpser">NTPServ</label>
-                <input type="text" id ="ntpser" name="ntpser" value="%ntpser%"><br>
-                <label for="tzone">TimeZone</label>
-                <input type="text" id ="tzone" name="tzone" value="%tzone%"><br>           
-            </p>        
-                  <button type="button" class="wifiman" onclick="post_ntpser()">Save</button>
+                  <button type="button" class="wifiman" onclick="post_form()">Save</button>
                 
         <p>
                 <a href="/update"><img src="elegantota.png" width="180" 
@@ -46,10 +44,13 @@
 <script>
 
 
-function built_in_red(){
+function post_form(){
 
 let postObj = { 
-    rgbled: 'red'  
+    ssid1: document.getElementById('ssid1').value, 
+    pass1: document.getElementById('pass1').value,
+    ssid2: document.getElementById('ssid2').value, 
+    pass2: document.getElementById('pass2').value
 }
 let post = JSON.stringify(postObj)
 
@@ -69,9 +70,7 @@ fetch("/posts", {
 // (D) SERVER RESPONSE
 .then((res) => {
     console.log(res);
-	//alert(res);
-	//alert("Post: calibr->start");
-
+	alert(res);
 })
 // (E) HANDLE ERRORS - OPTIONAL
 .catch((error) => {
@@ -81,76 +80,6 @@ fetch("/posts", {
 return false;
 }
 
-
-function built_in_blue(){
-
-let postObj = { 
-    rgbled: 'blue'  
-}
-let post = JSON.stringify(postObj)
-
-fetch("/posts", {
-    method: 'post',
-    body: post,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-})
-// (C) RETURN SERVER RESPONSE AS TEXT
-.then((res) => {
-   if (res.status != 200) { throw new Error("Bad Server Response"); }
-   return res.text();
-})
-// (D) SERVER RESPONSE
-.then((res) => {
-    console.log(res);
-	//alert(res);
-	//alert("Post: calibr->start");
-
-})
-// (E) HANDLE ERRORS - OPTIONAL
-.catch((error) => {
-    console.log(error)
-});
-// (F) PREVENT FORM SUBMIT
-return false;
-}
-
-function built_in_green(){
-
-let postObj = { 
-    rgbled: 'green'  
-}
-let post = JSON.stringify(postObj)
-
-fetch("/posts", {
-    method: 'post',
-    body: post,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-})
-// (C) RETURN SERVER RESPONSE AS TEXT
-.then((res) => {
-   if (res.status != 200) { throw new Error("Bad Server Response"); }
-   return res.text();
-})
-// (D) SERVER RESPONSE
-.then((res) => {
-    console.log(res);
-	//alert(res);
-	//alert("Post: calibr->start");
-
-})
-// (E) HANDLE ERRORS - OPTIONAL
-.catch((error) => {
-    console.log(error)
-});
-// (F) PREVENT FORM SUBMIT
-return false;
-}
 
 
 
@@ -166,16 +95,11 @@ setInterval(function ( ) {  /*период 2 сек.*/
     if (this.readyState == 4 && this.status == 200) {
 		  var myObj = JSON.parse(this.responseText);
 		  document.getElementById("rssi").innerHTML = myObj.rssi;
-		 // document.getElementById("humis").innerHTML = myObj.humis.toFixed(1);
-		 // document.getElementById("temps").innerHTML = myObj.temps.toFixed(1);
-		 // document.getElementById("co2s").innerHTML = myObj.co2;
 		  document.getElementById("freemem").innerHTML = myObj.freemem;
 		  document.getElementById("iday").innerHTML = myObj.iday;
 		  document.getElementById("ihour").innerHTML = myObj.ihour;  //.padStart(2,"0");
 		  document.getElementById("imin").innerHTML =  String(myObj.imin).padStart(2,"0");
 		  document.getElementById("isec").innerHTML =  String(myObj.isec).padStart(2,"0");
-      //g3diff = myObj.g3diff;
-      //g2diff = myObj.g2diff;
       }
     };
     xhttp.open("GET", "/jsonstate", true);

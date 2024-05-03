@@ -1,16 +1,22 @@
 
-#include "WebAsync.h"  //инклуды и внешние функции
+#include "Web.h"  //инклуды и внешние функции
+
 
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
 // Search for parameter in HTTP POST request
-const char* PARAM_RGB_LED = "rgbled";
+const char* PARAM_SSID1 = "ssid1";
+const char* PARAM_PASS1 = "pass1";
+const char* PARAM_SSID2 = "ssid2";
+const char* PARAM_PASS2 = "pass2";
+const char* ssid1Path = "/ssid1.txt"; //SPIFFS file name
+const char* pass1Path = "/pass1.txt"; //SPIFFS file name
+const char* ssid2Path = "/ssid2.txt"; //SPIFFS file name
+const char* pass2Path = "/pass2.txt"; //SPIFFS file name
 
-
-
-//обработка текста переданного клиентом заросом htttp post
+//обработка текста переданного клиентом заросом htttp POST
 void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 {
   StaticJsonDocument<200> doc; //резервируем место в памяти
@@ -25,30 +31,31 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
 
   for (JsonPair keyValue : root) { //проход о всем парам обьекта json
 
-    if (keyValue.key() == PARAM_RGB_LED){   //словили знакомый параметр json
-      String val = keyValue.value().as<const char*>();  //получили значение параметра
-      //обработка значения параметра json
-      Serial.println("POST: PARAM_RGBLED ->"+val);
-      if (val =="red") {
-        //RED
-        ws.push(ws.getcolor(60,0,0));
-        //Serial.println("ws.getcolor(60,0,0)="+String(ws.getcolor(60,0,0)));
-        ws.show();
-        Serial.println("LED_BUILTIN = RED");   
-      } else if (val =="blue"){
-        //BLUE
-        ws.push(ws.getcolor(0,0,60));
-        ws.show();
-        Serial.println("LED_BUILTIN = BLUE");   
-      } else if (val =="green"){
-        //GREEN
-        ws.push(ws.getcolor(0,60,0));
-        ws.show();
-        Serial.println("LED_BUILTIN = GREEN");
-      } else {
-        Serial.println("Error: Value Unknown");
-      }
+    if (keyValue.key() == PARAM_SSID1){
+      String val = keyValue.value().as<const char*>();//значение
+      Serial.print("SSID1 set to: ");
+      Serial.println(val);
+      writeFile(SPIFFS, ssid1Path, val.c_str());    
     }
+    if (keyValue.key() == PARAM_PASS1){
+      String val = keyValue.value().as<const char*>();
+      Serial.print("PASS1 set to: ");
+      Serial.println(val);
+      writeFile(SPIFFS, pass1Path, val.c_str());    
+    }
+    if (keyValue.key() == PARAM_SSID2){
+      String val = keyValue.value().as<const char*>();//значение
+      Serial.print("SSID2 set to: ");
+      Serial.println(val);
+      writeFile(SPIFFS, ssid2Path, val.c_str());    
+    }
+    if (keyValue.key() == PARAM_PASS2){
+      String val = keyValue.value().as<const char*>();
+      Serial.print("PASS2 set to: ");
+      Serial.println(val);
+      writeFile(SPIFFS, pass2Path, val.c_str());    
+    }
+
   }
 
 }
@@ -121,5 +128,18 @@ String processor(const String& var){
   if (var == "RSSI"){
       return String(WiFi.RSSI());
   }
+  else if(var == "ssid1"){  //что менять
+      return readFile(SPIFFS, ssid1Path);//чем менять
+  }
+  else if (var == "pass1"){
+      return readFile(SPIFFS, pass1Path);
+  }
+  else if(var == "ssid2"){  //что менять
+      return readFile(SPIFFS, ssid2Path);//чем менять
+  }
+  else if (var == "pass2"){
+      return readFile(SPIFFS, pass2Path);
+  }
+
  return String();
 }
