@@ -18,6 +18,9 @@ const char* pass1Path = "/pass1.txt"; //SPIFFS file name
 const char* ssid2Path = "/ssid2.txt"; //SPIFFS file name
 const char* pass2Path = "/pass2.txt"; //SPIFFS file name
 
+const char* http_username = "admin";
+const char* http_password = "admin";
+
 //обработка текста переданного клиентом заросом htttp POST
 void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 {
@@ -78,6 +81,10 @@ void notFound(AsyncWebServerRequest *request) {
 void web_init(){
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+
+    if(!request->authenticate(http_username, http_password))
+    return request->requestAuthentication();
+    
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
   
