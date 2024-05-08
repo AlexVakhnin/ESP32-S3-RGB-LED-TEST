@@ -13,3 +13,8 @@ extern unsigned long ihour;
 extern unsigned long imin;
 extern unsigned long isec;
 extern unsigned long iday;
+
+extern void handleLogin(AsyncWebServerRequest *request);
+extern void handleLogout(AsyncWebServerRequest *request);
+extern void handleNotFound(AsyncWebServerRequest *request);
+extern bool handleFileRead(AsyncWebServerRequest *request, String path);

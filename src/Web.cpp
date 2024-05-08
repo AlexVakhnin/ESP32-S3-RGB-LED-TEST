@@ -73,21 +73,17 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
  
 
 
-void notFound(AsyncWebServerRequest *request) {
-  request->send(404, "text/plain", "Not found");
-}
+//void notFound(AsyncWebServerRequest *request) {
+//  request->send(404, "text/plain", "Not found");
+//}
 
 
 void web_init(){
-
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-
-    if(!request->authenticate(http_username, http_password))
-    return request->requestAuthentication();
-    
+/*
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){    
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
-  
+*/  
   
 //POST
 //---------------------------------------------------------------------------
@@ -97,6 +93,23 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
 }, NULL, onConnectBody);
 
 //---------------------------------------------------------------------------
+
+    // Точки входа для страниц, где нет аутентификации
+    server.on("/login", HTTP_POST, handleLogin);
+    server.on("/logout", HTTP_GET, handleLogout);
+
+    server.on("/signin.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/signin.png", "image/png");
+    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    request->send(response);
+    });
+
+    server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/favicon.ico", "image/x-icon");
+    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    request->send(response);
+    });
+
   
   // Route to load style.css file
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -122,9 +135,16 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     request->send(response);
   });
 
+    //Точка входа для всех защищенных страниц, для которых нет директив httpServer.on(...)
+    server.onNotFound([](AsyncWebServerRequest *request) {   //клиентский запрос URL
+                Serial.println("onNotFound(): "+request->url());
+                if (!handleFileRead(request, request->url())){   // если на FS такого файла нет...
+                    handleNotFound(request);    // выдаем ответ 404 (Not Found) error
+                }                               // иначе зарос обработает handleFileRead()
+            });
 
 
-  server.onNotFound(notFound);
+  //server.onNotFound(notFound);
 
   AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
   server.begin();
