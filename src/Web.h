@@ -18,3 +18,4 @@ extern void handleLogin(AsyncWebServerRequest *request);
 extern void handleLogout(AsyncWebServerRequest *request);
 extern void handleNotFound(AsyncWebServerRequest *request);
 extern bool handleFileRead(AsyncWebServerRequest *request, String path);
+extern bool is_authenticated(AsyncWebServerRequest *request);

@@ -7,7 +7,7 @@ const char* www_password = "admin";
 
 //Declaration functions
 extern String processor(const String& var);
-void serverRouting();
+//void serverRouting();
 bool is_authenticated(AsyncWebServerRequest *request);
 
 String sha1(String payloadStr){
@@ -111,6 +111,7 @@ void handleNotFound(AsyncWebServerRequest *request) {
 }
 
 // "/login" обработчик
+// принимает и обрабатывает данные из формы
 void handleLogin(AsyncWebServerRequest *request) {
     Serial.println("Handle login");
     String msg;
@@ -167,11 +168,11 @@ void handleLogout(AsyncWebServerRequest *request) {
 
 //Проверка присутствия правильного токена в шапке запроса от броузера
 bool is_authenticated(AsyncWebServerRequest *request) {
-    Serial.println("is_authenticated(): "+request->url());
+    //Serial.println("is_authenticated(): "+request->url());//DEBUG
     if (request->hasHeader("Cookie")) {
-        Serial.print("Found cookie: ");
+    //    Serial.print("Found cookie: ");                   //DEBUG
         String cookie = request->header("Cookie");
-        Serial.println(cookie);
+    //    Serial.println(cookie);                            //DEBUG
  
         String token = sha1(String(www_username) + ":" +
                 String(www_password) + ":" +
@@ -179,7 +180,7 @@ bool is_authenticated(AsyncWebServerRequest *request) {
 //  token = sha1(token);
  
         if (cookie.indexOf("ESPSESSIONID=" + token) != -1) {
-            Serial.println("Authentication Successful");
+    //        Serial.println("Authentication Successful");    //DEBUG
             return true;
         }
     }

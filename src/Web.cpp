@@ -1,5 +1,6 @@
 
 #include "Web.h"  //инклуды и внешние функции
+#include "ArduinoJson.h"
 
 
 
@@ -24,6 +25,7 @@ const char* http_password = "admin";
 //обработка текста переданного клиентом заросом htttp POST
 void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 {
+  if (!is_authenticated(request)) {Serial.println("!!! blocking hackers !!!");return;} //если нет аутентификации, выход..
   StaticJsonDocument<200> doc; //резервируем место в памяти
 
   auto error = deserializeJson(doc, data);  //разбор json структуры
@@ -71,17 +73,15 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
 
 }
  
-
-
-//void notFound(AsyncWebServerRequest *request) {
-//  request->send(404, "text/plain", "Not found");
-//}
-
-
 void web_init(){
 /*
+  // корень с проверкой аутентификации
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){    
-    request->send(SPIFFS, "/index.html", String(), false, processor);
+    if (is_authenticated(request)) { 
+      request->send(SPIFFS, "/index.html", String(), false, processor);
+    } else {
+      request->send(SPIFFS, "/login.html", "text/html");
+    }
   });
 */  
   
@@ -110,7 +110,6 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     request->send(response);
     });
 
-  
   // Route to load style.css file
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/style.css", "text/css");
@@ -120,19 +119,26 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/elegantota.png", "image/png");
   });
   
-  //Это ответ сервера на AJAX запрос из WEB страницы"
+  // Это ответ сервера на AJAX запрос из WEB страницы"
+  // с проверкой аутентификации
   server.on("/jsonstate", HTTP_GET, [](AsyncWebServerRequest *request){
-    AsyncResponseStream *response = request->beginResponseStream("application/json");    
-    const int capacity = JSON_OBJECT_SIZE(6);//Количество живых параметров JSON
-    StaticJsonDocument<capacity> doc;
-    doc["rssi"] = WiFi.RSSI();
-    doc["freemem"] = ESP.getFreeHeap();  //или String().c_str();???????
-    doc["iday"] = iday;
-    doc["ihour"] = ihour;
-    doc["imin"] = imin;
-    doc["isec"] = isec;
-    serializeJson(doc, *response);
-    request->send(response);
+    if (is_authenticated(request)) { 
+      AsyncResponseStream *response = request->beginResponseStream("application/json");    
+      const int capacity = JSON_OBJECT_SIZE(6);//Количество живых параметров JSON
+      StaticJsonDocument<capacity> doc;
+      doc["rssi"] = WiFi.RSSI();
+      doc["freemem"] = ESP.getFreeHeap();  //или String().c_str();???????
+      doc["iday"] = iday;
+      doc["ihour"] = ihour;
+      doc["imin"] = imin;
+      doc["isec"] = isec;
+      serializeJson(doc, *response);
+      request->send(response);
+    } else {
+      //AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/login.html", "text/html");
+      //request->send(response); 
+      request->send(SPIFFS, "/login.html", "text/html");
+    }
   });
 
     //Точка входа для всех защищенных страниц, для которых нет директив httpServer.on(...)
@@ -143,13 +149,8 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
                 }                               // иначе зарос обработает handleFileRead()
             });
 
-
-  //server.onNotFound(notFound);
-
   AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
-  server.begin();
-
-  
+  server.begin();  
 }
 
 //Динамическая замена всех параметров на WEB странице "/"
