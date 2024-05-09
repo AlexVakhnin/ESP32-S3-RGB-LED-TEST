@@ -83,8 +83,8 @@ void web_init(){
       request->send(SPIFFS, "/login.html", "text/html");
     }
   });
-*/  
-  
+*/
+
 //POST
 //---------------------------------------------------------------------------
 
@@ -123,7 +123,10 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
   // с проверкой аутентификации
   server.on("/jsonstate", HTTP_GET, [](AsyncWebServerRequest *request){
     if (is_authenticated(request)) { 
-      AsyncResponseStream *response = request->beginResponseStream("application/json");    
+      AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8"); 
+      response->addHeader("Cache-Control", "no-cache");//не кешируем 
+      response->addHeader("X-Content-Type-Options", "nosniff");//не пытаться угадывать MIME (contrnt-type)
+
       const int capacity = JSON_OBJECT_SIZE(6);//Количество живых параметров JSON
       StaticJsonDocument<capacity> doc;
       doc["rssi"] = WiFi.RSSI();
@@ -135,9 +138,7 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
       serializeJson(doc, *response);
       request->send(response);
     } else {
-      //AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/login.html", "text/html");
-      //request->send(response); 
-      request->send(SPIFFS, "/login.html", "text/html");
+      request->send(200, "text/plain","Authentication Error"); //ответ, т.к вызываем в фоне
     }
   });
 
@@ -149,7 +150,10 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
                 }                               // иначе зарос обработает handleFileRead()
             });
 
-  AsyncElegantOTA.begin(&server);    // Start AsyncElegantOTA
+  //cache-control для файлов..
+  //server.serveStatic("/jsonstate", SPIFFS, "/jsonstate", "no-cache, no-store, must-revalidate");
+
+  AsyncElegantOTA.begin(&server,"admin","admin");    // Start AsyncElegantOTA
   server.begin();  
 }
 
