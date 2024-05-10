@@ -1,12 +1,15 @@
 
 body{
+	background-color:powderblue;
+	/*
 	background:#fafaf9;
 	color:#06031c;
+	*/
 	margin: 0px auto;
 	text-align: center;
 	font-family: Arial, Helvetica, sans-serif;
 	display: block; 
-  user-select:none;
+	user-select:none;
 	}
 	
 
@@ -18,6 +21,7 @@ body{
   display: grid; 
   grid-gap: 2rem; 
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-block-start: 2%;	/*верхний отступ*/
 }
 .card {       /*это основная панель, на ней все элементы*/
   position:relative;
@@ -28,15 +32,15 @@ body{
   border-radius:3px;
   /*border: 1px solid #333;*/
   background:#e2eaec;
-  /*box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);*/
+  box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
 }
 .sys-inf {  /*параграф с системной информацией, верхняя строка*/
-	margin-block-start: 22px;
-	margin-block-end: 22px;	
+	margin-block-start: 40px;
+	margin-block-end: 20px;	
 	font-size: 18px;
 	font-weight: 700;
 }
-#freemem {
+#freemem {  /*желтая подсветка*/
   /*border: red 2px solid;*/
   background-color: #f7ec88;
 }
@@ -45,37 +49,42 @@ p {
 }
 /*-------------------------------------------------------------------------*/
 label {
-  font-size: 18px/*1.2rem8*/; 
+  font-size: 18px/*1.2rem8*/;
+  display: inline-block;
+  width: 60px;
+  text-align:left;
 }
-input[type=text] {
-  width: 50%;
+
+input {
   padding: 8px 20px;
-  margin: 18px;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 18px/*1.2rem*/;
+  width: 50%;
+  margin: 10px;
 }
-input[type=text]:focus {
+input:focus {
   outline: none;
   /*background-color:#ffffcc;*/ 
-  border-width:2px;
+  border-width:1px;
   border-color:#a9aaa3;
 }
+
 button {
   border: none;
   color: #FEFCFB;
-  background-color: #676a6d;
   padding: 10px 10px;
   text-align: center;
   font-size: 16px;
-  width: 80px;
+  width: 100px;
   border-radius: 4px;
   /*transition-duration: 0.4s;*/
-  margin-bottom: 36px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 10px;
+  /*margin-bottom: 36px;*/
+  /*background-color: #4CAF50;*/
+  background-color: #467c7f;
 }
 .wifiman {
   cursor: pointer;	

@@ -19,27 +19,31 @@
             <span id="iday">0</span>
             <span id="ihour">0</span>:<span id="imin">0</span>.<span id="isec">0</span>
         </p>
-        <p>
-            <a href="/logout">Logout</a>
+		<p>
+			<a href="/logout"><img class="logout-picture" src="logout.png" alt="Logout-picture" style="border-radius:4px;"></a> <br>
         </p>
+
         <p>
-            <label for="ssid">SSID1</label>
+			<img class="network-picture" src="network.png" alt="Network-picture" style="border-radius:5px;"> <br>
+            <label for="ssid1">SSID1</label>
             <input type="text" id ="ssid1" name="ssid1" value="%ssid1%"><br>
-            <label for="pass">PASS1</label>
-            <input type="text" id ="pass1" name="pass1" value="%pass1%"><br>           
+            <label for="pass1">PASS1</label>
+            <input type="text" id ="pass1" name="pass1" value="%pass1%"><br>
                 
-            <label for="ntpser">SSID2</label>
+            <label for="ssid2">SSID2</label>
             <input type="text" id ="ssid2" name="ssid2" value="%ssid2%"><br>
-            <label for="tzone">PASS2</label>
-            <input type="text" id ="pass2" name="pass2" value="%pass2%"><br>           
+            <label for="pass2">PASS2</label>
+            <input type="text" id ="pass2" name="pass2" value="%pass2%"><br>
+			
+			<button type="button" class="wifiman" onclick="post_form()">Save</button>
+			<button type="button" class="wifiman" onclick="post_reset()">Reset</button>
         </p>        
-                  <button type="button" class="wifiman" onclick="post_form()">Save</button>
-                  <button type="button" class="wifiman" onclick="post_reset()">Reset</button>
                 
-        <p>
+        <p style="margin-block-end: 40px;">
                 <a href="/update"><img src="elegantota.png" width="180" 
-                height="40"></a><br><br>
+                height="40"></a>
         </p>
+        
       </div>
   </div>
 
