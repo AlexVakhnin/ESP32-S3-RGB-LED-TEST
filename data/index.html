@@ -3,7 +3,7 @@
 
 <head>
   <title>Testing ESP32-S3-DEVKITC-1</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -20,11 +20,13 @@
             <span id="ihour">0</span>:<span id="imin">0</span>.<span id="isec">0</span>
         </p>
 		<p>
-			<a href="/logout"><img class="logout-picture" src="logout.png" alt="Logout-picture" style="border-radius:4px;"></a> <br>
+			<a href="/logout">
+                <img class="logout-picture" src="logout.png" alt="Logout-picture" style="border-radius:4px;" fetchpriority="high">
+            </a> <br>
         </p>
 
         <p>
-			<img class="network-picture" src="network.png" alt="Network-picture" style="border-radius:5px;"> <br>
+			<img class="network-picture" src="network.png" alt="Network-picture" style="border-radius:5px;" fetchpriority="high"> <br>
             <label for="ssid1">SSID1</label>
             <input type="text" id ="ssid1" name="ssid1" value="%ssid1%"><br>
             <label for="pass1">PASS1</label>
@@ -40,7 +42,7 @@
         </p>        
                 
         <p style="margin-block-end: 40px;">
-                <a href="/update"><img src="elegantota.png" width="180" 
+                <a href="/update"><img src="elegantota.png" alt="ota-picture" width="180" 
                 height="40"></a>
         </p>
         

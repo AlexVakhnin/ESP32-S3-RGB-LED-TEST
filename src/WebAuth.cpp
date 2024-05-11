@@ -43,8 +43,8 @@ String sha1(String payloadStr){
 }
 
 String getContentType(String filename) {
-    if (filename.endsWith(F(".htm"))) return F("text/html");
-    else if (filename.endsWith(F(".html"))) return F("text/html");
+    if (filename.endsWith(F(".htm"))) return F("text/htmltext/html");
+    else if (filename.endsWith(F(".html"))) return F("text/html; charset=utf-8");
     else if (filename.endsWith(F(".css"))) return F("text/css");
     else if (filename.endsWith(F(".js"))) return F("application/javascript");
     else if (filename.endsWith(F(".json"))) return F("application/json");
@@ -81,9 +81,12 @@ bool handleFileRead(AsyncWebServerRequest *request, String path) {
         //Отдельная обработка запросов у которых есть processor, и у каждого свой..
         if (path.equals("/index.html")){
             Serial.println("caught the /index.html, need processor..");
-            request->send(SPIFFS, "/index.html", String(), false, processor);    
+            AsyncWebServerResponse *response = request->beginResponse(SPIFFS, path, contentType,false, processor);
+            response->addHeader("Cache-Control","no-cache");
+            request->send(response);    
         } else { //все остальные запросы..
             AsyncWebServerResponse *response = request->beginResponse(SPIFFS, path, contentType);
+            response->addHeader("Cache-Control","no-cache");
             request->send(response);
         }
 

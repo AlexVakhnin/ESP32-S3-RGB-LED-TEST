@@ -75,7 +75,7 @@ void onConnectBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, si
  
 void web_init(){
 /*
-  // корень с проверкой аутентификации
+  // корень с проверкой аутентификации (так тоже работает нормально !!!)
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){    
     if (is_authenticated(request)) { 
       request->send(SPIFFS, "/index.html", String(), false, processor);
@@ -84,7 +84,6 @@ void web_init(){
     }
   });
 */
-
 //POST
 //---------------------------------------------------------------------------
 
@@ -98,27 +97,33 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     server.on("/login", HTTP_POST, handleLogin);
     server.on("/logout", HTTP_GET, handleLogout);
 
+    // Все картинки кэшируем без проверки
     server.on("/signin.png", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/signin.png", "image/png");
     response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
     request->send(response);
     });
-
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/favicon.ico", "image/x-icon");
     response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
     request->send(response);
     });
+    server.on("/network.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/network.png", "image/png");
+    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    request->send(response);
+    });
+    server.on("/logout.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/logout.png", "image/png");
+    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    request->send(response);
+    });
+    server.on("/elegantota.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/elegantota.png", "image/png");
+    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    request->send(response);
+    });
 
-  // Route to load style.css file
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/style.css", "text/css");
-  });
-  // Route to elegantota.png
-  server.on("/elegantota.png", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/elegantota.png", "image/png");
-  });
-  
   // Это ответ сервера на AJAX запрос из WEB страницы"
   // с проверкой аутентификации
   server.on("/jsonstate", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -151,7 +156,7 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
             });
 
   //cache-control для файлов..
-  //server.serveStatic("/jsonstate", SPIFFS, "/jsonstate", "no-cache, no-store, must-revalidate");
+  //server.serveStatic("/index.html", SPIFFS, "/index.html").setCacheControl("no-cache");//, "no-cache");
 
   AsyncElegantOTA.begin(&server,"admin","admin");    // Start AsyncElegantOTA
   server.begin();  
