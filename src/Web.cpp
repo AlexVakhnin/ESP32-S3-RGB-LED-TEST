@@ -100,27 +100,30 @@ server.on("/posts", HTTP_POST, [](AsyncWebServerRequest *request){
     // Все картинки кэшируем без проверки
     server.on("/signin.png", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/signin.png", "image/png");
-    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    response->addHeader("Cache-Control","max-age=31536000, immutable"); 
     request->send(response);
     });
+    
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/favicon.ico", "image/x-icon");
-    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    response->addHeader("X-Content-Type-Options", "nosniff");//не пытаться угадывать MIME (contrnt-type)
+    response->addHeader("Cache-Control","max-age=31536000, immutable");
     request->send(response);
     });
+    
     server.on("/network.png", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/network.png", "image/png");
-    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    response->addHeader("Cache-Control","max-age=31536000, immutable"); 
     request->send(response);
     });
     server.on("/logout.png", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/logout.png", "image/png");
-    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    response->addHeader("Cache-Control","max-age=31536000, immutable"); 
     request->send(response);
     });
     server.on("/elegantota.png", HTTP_GET, [](AsyncWebServerRequest *request){
     AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/elegantota.png", "image/png");
-    response->addHeader("Cache-Control","max-age=3600"); /*very important !!!!!*/
+    response->addHeader("Cache-Control","max-age=31536000, immutable");
     request->send(response);
     });
 

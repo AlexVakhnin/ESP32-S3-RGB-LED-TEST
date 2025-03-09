@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "time.h"
-#include "sntp.h"
+//#include "sntp.h"
+#include "esp_sntp.h"
 
 void handle_time(); //декларация функции
 extern String formatted_time;
@@ -8,9 +9,11 @@ extern String formatted_time;
 unsigned long previousMillis_ntp = 0;
 unsigned long interval_ntp = 10000;// 10сек
 
-const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = 60*60*2; //gmt +2 = 60*60*2 -> +2 часа
-const int   daylightOffset_sec = 3600; //DST = 60*60 =3600 -> +1 час
+//const char* ntpServer = "pool.ntp.org";
+const char* ntpServer = "ua.pool.ntp.org";
+const long  gmtOffset_sec = 60*60*2; //gmt +2 = 60*60*2 -> +2 часа зона
+//const int   daylightOffset_sec = 3600; //DST = 60*60 =3600 -> +1 час корректировка
+const int   daylightOffset_sec = 0; //DST = 60*60 =3600 -> +1 час
 
 
 
