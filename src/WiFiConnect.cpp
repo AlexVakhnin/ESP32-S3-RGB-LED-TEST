@@ -70,6 +70,9 @@ void wifi_init(){
   if (ind==1){ssid=ssid1;pass=pass1;}
   else if (ind==2){ssid=ssid2;pass=pass2;}
 
+  //ssid = "_Tenda";  //debug !!!!!!!!!
+  //pass = "tenda123";
+
   u8g2_print2(ssid); //SSID на дисплей
   Serial.println("ssid="+ssid);
   WiFi.begin(ssid, pass);
@@ -88,8 +91,8 @@ void wifi_init(){
   if(flag_apn) {
     //создаем AP
     Serial.println("Creating Access Point..");
-    WiFi.softAP("Soft-AP-ESP32", "11111111"); // NULL sets an open Access Point
-    u8g2_print2("SoftAP:11111111");
+    WiFi.softAP("Clock", "clock123"); // NULL sets an open Access Point
+    u8g2_print2("pas=clock123");
     ip = WiFi.softAPIP();
     Serial.print("AP IP address: ");Serial.println(ip);
   } else {
