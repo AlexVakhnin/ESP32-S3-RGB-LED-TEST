@@ -7,13 +7,14 @@ void handle_time(); //декларация функции
 extern String formatted_time;
 
 unsigned long previousMillis_ntp = 0;
-unsigned long interval_ntp = 10000;// 10сек
+unsigned long interval_ntp = 30000;// 30сек
 
-//const char* ntpServer = "pool.ntp.org";
-const char* ntpServer = "ua.pool.ntp.org";
+const char* ntpServer = "pool.ntp.org"; //это основной
+//const char* ntpServer = "ua.pool.ntp.org";
+//const char* ntpServer = "ntp.time.in.ua"; //это Украина не рабочий..
 const long  gmtOffset_sec = 60*60*2; //gmt +2 = 60*60*2 -> +2 часа зона
-const int   daylightOffset_sec = 3600; //DST = 60*60 =3600 -> +1 час корректировка
-//const int   daylightOffset_sec = 0; //DST = 60*60 =3600 -> +1 час
+//const int   daylightOffset_sec = 3600; //DST = 60*60 =3600 -> +1 час корректировка
+const int   daylightOffset_sec = 0; //DST = 60*60 =3600 -> +1 час
 
 
 
