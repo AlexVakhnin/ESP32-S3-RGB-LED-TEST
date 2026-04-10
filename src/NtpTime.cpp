@@ -7,14 +7,14 @@ void handle_time(); //декларация функции
 extern String formatted_time;
 
 unsigned long previousMillis_ntp = 0;
-unsigned long interval_ntp = 30000;// 30сек
+unsigned long interval_ntp = 30000;// 30сек время обновления табло..
 
 const char* ntpServer = "pool.ntp.org"; //это основной
-//const char* ntpServer = "ua.pool.ntp.org";
-//const char* ntpServer = "ntp.time.in.ua"; //это Украина не рабочий..
-const long  gmtOffset_sec = 60*60*2; //gmt +2 = 60*60*2 -> +2 часа зона
+//const char* ntpServer = "ua.pool.ntp.org"; //должен сам определять, что UA
+//const long  gmtOffset_sec = 60*60*2; //gmt +2 = 60*60*2 -> +2 часа зона
+const long  gmtOffset_sec = 60*60*3; //gmt +3 = 60*60*2 -> +3 часа зона
 //const int   daylightOffset_sec = 3600; //DST = 60*60 =3600 -> +1 час корректировка
-const int   daylightOffset_sec = 0; //DST = 60*60 =3600 -> +1 час
+const int   daylightOffset_sec = 0; // 0 часов корректировка (работает не корректно..)
 
 
 
@@ -27,7 +27,7 @@ void timeavailable(struct timeval *t)
 
 
 
-// Получаем время и заполняем переменную formatted_time
+// Получаем время и заполняем переменную formatted_time (T=30 sec)
 void handle_time(){
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis_ntp >=interval_ntp) {
@@ -49,9 +49,15 @@ void handle_time(){
 
 
 void time_init(){
-    // set notification call-back function
-    // By default it seems to be once an hour
+    // set notification call-back function - обращение к NTP
+    // By default it seems to be once an hour - по умолчанию раз в час
     sntp_set_time_sync_notification_cb( timeavailable );
+
+    //-------
+    // Set interval NTP in milliseconds (e.g., 5 min)
+    uint32_t interval = 5 * 60 * 1000; 
+    sntp_set_sync_interval(interval);
+    //-------
 
     configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); //конфигурация клиента NTP
         // первое обращение к NTP серверу
