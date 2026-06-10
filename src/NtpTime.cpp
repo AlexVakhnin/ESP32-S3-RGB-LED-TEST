@@ -53,11 +53,11 @@ void time_init(){
     // By default it seems to be once an hour - по умолчанию раз в час
     sntp_set_time_sync_notification_cb( timeavailable );
 
-    //-------
+    //--------
     // Set interval NTP in milliseconds (e.g., 5 min)
     uint32_t interval = 5 * 60 * 1000; 
     sntp_set_sync_interval(interval);
-    //-------
+    //--------
 
     configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); //конфигурация клиента NTP
         // первое обращение к NTP серверу
